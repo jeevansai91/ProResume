@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>ProResume – Modern Resume Builder</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700;400&display=swap" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <style>
+    :root {
+      --magenta: #d72660;
+      --white: #fff;
+      --muted: #777;
+      --template1: #90caf9;
+      --template2: #81c784;
+      --template3: #ffd54f;
+      --template4: #ba68c8;
+      --template5: #f48fb1;
+      --template6: #ff8a65;
+      --template7: #ce93d8;
+      --template8: #7986cb;
+      --template9: #b2dfdb;
+      --template10: #cfd8dc;
+      --template11: #a1887f;
+      --template12: #e57373;
+    }
+    html,body { background: var(--white)!important; color:#232323;font-family:'Inter',Arial,sans-serif; }
+    .bg-magenta { background: var(--magenta) !important; color: #fff !important; }
+    .text-magenta { color: var(--magenta) !important; }
+    .navbar { background: var(--white)!important; border-bottom:1px solid #ededed; }
+    .navbar-brand {
+      font-size:2rem!important; font-weight:700;color:var(--magenta)!important;letter-spacing:.5px;
+      display:flex;gap:8px;align-items:center; cursor:pointer;
+    }
+    .btn-magenta {
+      background: var(--magenta); color: #fff; border: none;
+      font-weight: 700; font-size: 1.1rem; border-radius: 0.6rem;
+      box-shadow: 0 2px 8px #d7266020; transition: transform .13s;
+    }
+    .btn-magenta:hover, .btn-magenta:focus {
+      color: #fff!important; transform: scale(1.05) translateY(-2px);
+      box-shadow: 0 8px 30px #c2185b44;
+    }
+    .btn-link.text-magenta {
+      color: var(--magenta) !important;
+      font-weight: 600;
+      text-decoration: none !important;
+      transition: color 0.14s;
+    }
+    .btn-link.text-magenta:hover { color: #900a35 !important; }
+    .hero {
+      display:flex;flex-wrap:wrap;min-height:78vh;
+      align-items:center;justify-content:center;gap:6vw;margin-top:0;
+    }
+    .hero-left {
+      flex:1 1 340px; min-width:280px; max-width:430px; align-self:flex-start;
+    }
+    .hero-left h1 {
+      font-size:2.5rem;font-weight:800;color:var(--magenta);margin-bottom:1.1rem;letter-spacing:-1px;
+    }
+    .hero-left p { color:var(--muted);font-size:1.13rem;margin-bottom:2.2rem;line-height:1.7; }
+    .hero-right {
+      flex:1 1 330px; min-width:310px; max-width:380px; align-self:flex-start;
+      background: #f7f5fa;border-radius:15px; border: 2px solid #dfdbe6;
+      padding:2.2rem 1.3rem 2.2rem 1.4rem; margin-top: 8px;
+      box-shadow: 0 2px 18px #a99!;
+    }
+    /* Sample Resume */
+    .sample-resume-header { text-align:center; border-bottom:1.5px solid var(--magenta); margin-bottom:19px; padding-bottom:10px;}
+    .sample-resume-header h2 { font-size:1.35rem;margin-bottom:2px;font-weight:700;color:var(--magenta);}
+    .sample-resume-header .role { color: #d72660; font-weight: 600 }
+    .sample-section-title { color: var(--magenta); font-size:1.04rem; font-weight:700;margin: 16px 0 4px 0; }
+    .badge {
+      background: var(--magenta); color: #fff; font-size: .95em; margin-right: .4em; border-radius:12px;
+      padding: 0.13em 0.8em;
+    }
+    #templateGrid { display:flex; flex-wrap:wrap; gap:2.4rem; justify-content:center;}
+    .resume-template-card {
+      width:205px; min-width:170px;border:2px solid #e5e7eb; border-radius:13px;
+      overflow:hidden; margin-bottom:.7rem; position:relative;background:#fdf9ff;transition:box-shadow .16s, border-color .15s;
+      box-shadow: 0 1px 13px #d7266020;
+    }
+    .resume-template-card:hover, .resume-template-card:focus-within {
+      border-color: var(--magenta);
+      box-shadow: 0 4px 22px #d7266040; z-index:99;
+    }
+    .template-preview {
+      height:210px; display:flex; align-items:flex-start; justify-content:center;
+      padding:13px 8px 9px 8px; color:#232323; font-size:.97rem;
+      border-top-width:5px; border-top-style:solid;
+    }
+    .choose-btn-box { text-align:center; position:absolute; left:0; right:0; bottom:7px; opacity:0;transition:.23s;pointer-events:none;}
+    .resume-template-card:hover .choose-btn-box,.resume-template-card:focus-within .choose-btn-box { opacity:1; pointer-events:auto;}
+    .choose-template-btn { background:var(--magenta);color:#fff;border:none; border-radius:8px; padding:0.34rem 1.12rem;font-size:1rem;font-weight:600;box-shadow:0 2px 11px #d7266027; transition:box-shadow .14s,transform .11s;}
+    .choose-template-btn:hover {box-shadow:0 8px 33px #d7266044; transform:scale(1.083);}
+    .modal-content { background:#fdf9ff; border-radius:15px; border:2px solid #ece5ec;}
+    .modal-header { border-bottom: 1px solid #e0dede;}
+    .modal-title, .modal-body, .modal-footer { color: #3b333a;}
+    .form-label { color: var(--magenta)!important;}
+    .resume-form-section { margin-top:26px;}
+    #resumePreviewCard { background:#f7f2f9;border-radius:13px; }
+    .back-home-btn { display: block; margin-bottom: 0.5rem; }
+    @media (max-width: 900px) {
+      .hero { flex-direction:column;gap:3vw}
+      .hero-left, .hero-right {max-width:97vw;}
+    }
+    @media (max-width: 600px) {
+      .hero,.hero-left,.hero-right {padding:0 0.5rem!important;}
+      .hero-left h1 { font-size:2rem;}
+    }
+  </style>
+</head>
+<body>
+<!-- Navbar -->
+  <nav class="navbar navbar-expand-sm navbar-light">
+    <div class="container-fluid px-3">
+      <a class="navbar-brand" href="#" id="homeLogoLink">
+        <svg width="32" height="32" fill="none"><rect width="32" height="32" rx="8" fill="#d72660"/><path d="M11 8h10v12a2 2 0 0 1-2 2H11V8Zm2 6h6v2h-6v-2Z" fill="#fff"/></svg>
+        ProResume
+      </a>
+      <div class="navbar-btns ms-auto">
+        <button class="btn btn-magenta me-3" id="buildResumeBtn">Build Resume</button>
+        <button class="btn btn-magenta" id="signInBtn">Sign In</button>
+      </div>
+    </div>
+  </nav>
+<!-- Hero/Main Page -->
+  <section class="hero" id="mainHero">
+    <div class="hero-left">
+      <h1>2025's Top Resume Templates</h1>
+      <p>Build your resume in as little as <b>5 minutes</b> using our ATS resume templates and pre-written examples.</p>
+      <button class="btn btn-magenta" id="buildResumeHeroBtn">Build your resume for free</button>
+    </div>
+    <div class="hero-right" id="sampleResume">
+      <!-- JS fills different sample on each page reload for demo -->
+    </div>
+  </section>
+  <!-- Template Selection Page (hidden at start) -->
+  <section class="container my-4 d-none" id="chooseTemplatePage">
+    <button type="button" class="btn btn-link text-magenta mb-3 back-home-btn" onclick="returnToHome()">← Back to Home</button>
+    <div class="text-center mb-4">
+      <h2 class="text-magenta mb-2" style="font-weight:800;">Choose a Resume Template</h2>
+      <p style="color:#666;max-width:580px;margin:0 auto;">
+        Select one of our expertly designed resume templates to kickstart your job application.<br>
+        Try out one of our premium resume templates to make an impressive resume and land your dream job in no time!
+      </p>
+    </div>
+    <div id="templateGrid"></div>
+  </section>
+  <!-- Continue Modal -->
+  <div class="modal fade" id="chooseModeModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content text-center">
+        <div class="modal-header border-0 mt-2 pb-0">
+          <h5 class="modal-title mx-auto text-magenta" id="chooseModeTitle">Continue</h5>
+        </div>
+        <div class="modal-body">
+          <p>How would you like to get started?</p>
+          <div class="d-flex flex-column gap-3 my-3">
+            <button class="btn btn-magenta mx-auto w-75" id="uploadResumeBtn">Upload your previous resume</button>
+            <button class="btn btn-magenta mx-auto w-75" id="startFromScratchBtn">Build resume from scratch</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Login Modal -->
+  <div class="modal fade" id="signInModal" data-bs-backdrop="static" tabindex="-1">
+    <div class="modal-dialog">
+      <form class="modal-content" id="loginForm" autocomplete="off">
+        <div class="modal-header">
+          <h5 class="modal-title text-magenta">Sign In</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+            <label class="form-label">Email</label>
+            <input class="form-control mb-3" type="email" id="loginEmail" required>
+            <label class="form-label">Password</label>
+            <input class="form-control mb-2" type="password" id="loginPass" required>
+            <small style="color:var(--magenta)">Demo: user@example.com/password123</small>
+        </div>
+        <div class="modal-footer border-0">
+          <button class="btn btn-magenta" type="submit" style="width:100%">Sign In</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- Upload Resume Modal (ENABLED) -->
+  <div class="modal fade" id="uploadResumeModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content text-center">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title text-magenta">Upload Resume</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="file" id="resumeFileInput" class="form-control mb-3" accept=".pdf,.doc,.docx">
+          <div id="resumeFileStatus" class="my-2" style="color:var(--magenta);font-size:1.01em"></div>
+          <button class="btn btn-magenta" data-bs-dismiss="modal">Done</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Resume Build Form (multi-step) -->
+  <section class="container my-5 d-none" id="resumeFormSection">
+    <button type="button" class="btn btn-link text-magenta mb-3 back-home-btn" onclick="returnToHome()">← Back to Home</button>
+    <form id="resumeForm" class="p-4 bg-white rounded-4 mx-auto" style="max-width:500px;color:#454" autocomplete="off">
+      <div id="formStep1">
+        <h4 class="mb-3 text-magenta">Personal Information</h4>
+        <div class="mb-3"><label class="form-label">Full Name *</label>
+          <input type="text" class="form-control" id="fullName" required></div>
+        <div class="mb-3"><label class="form-label">Email *</label>
+          <input type="email" class="form-control" id="formEmail" required></div>
+        <div class="mb-3"><label class="form-label">Phone *</label>
+          <input type="text" class="form-control" id="phone" required></div>
+        <div class="mb-3"><label class="form-label">LinkedIn</label>
+          <input type="text" class="form-control" id="linkedin"></div>
+        <div class="mb-3"><label class="form-label">GitHub/Portfolio</label>
+          <input type="text" class="form-control" id="github"></div>
+        <button type="button" class="btn btn-magenta float-end" onclick="nextFormStep(1)">Next</button>
+        <div class="clearfix"></div>
+      </div>
+      <div class="d-none" id="formStep2">
+        <h4 class="mb-3 text-magenta">Content & Highlights</h4>
+        <div class="mb-3"><label class="form-label">Summary *</label>
+          <textarea class="form-control" id="objective" rows="3" required></textarea></div>
+        <div class="mb-3"><label class="form-label">Education *</label>
+          <input class="form-control" id="education" placeholder="e.g. B.Tech, XYZ College, 2023"></div>
+        <div class="mb-3"><label class="form-label">Key Skills *</label>
+          <input class="form-control" id="skills" required placeholder="Comma separated..."></div>
+        <div class="mb-3"><label class="form-label">Experience</label>
+          <textarea class="form-control" id="experience" rows="3"></textarea></div>
+        <div class="mb-3"><label class="form-label">Projects</label>
+          <textarea class="form-control" id="projects" rows="3"></textarea></div>
+        <div class="mb-3"><label class="form-label">Achievements</label>
+          <textarea class="form-control" id="achievements" rows="2"></textarea></div>
+        <button type="button" class="btn btn-light me-2" onclick="prevFormStep(2)">Back</button>
+        <button type="button" class="btn btn-magenta" onclick="showResumePreview()">Preview</button>
+      </div>
+      <div class="d-none" id="formStep3">
+        <h4 class="mb-2 text-magenta">Resume Preview</h4>
+        <div id="resumePreviewCard" class="p-3"></div>
+        <button type="button" class="btn btn-light me-2" onclick="prevFormStep(3)">Edit</button>
+        <button id="downloadPdf" type="button" class="btn btn-magenta">Download as PDF</button>
+      </div>
+    </form>
+  </section>
+  <footer class="text-center py-4 text-secondary" style="font-size:.97em;">
+    © 2025 ProResume | Crafted for careers
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    // ========== Home/Navigation ==========
+    const mainHero = document.getElementById('mainHero');
+    const chooseTemplatePage = document.getElementById('chooseTemplatePage');
+    const resumeFormSection = document.getElementById('resumeFormSection');
+    // Home nav/logo click
+    document.getElementById('homeLogoLink').onclick = function(e){
+      e.preventDefault();
+      showHome();
+    };
+    function returnToHome() { showHome(); }
+    function showHome() {
+      mainHero.classList.remove('d-none');
+      chooseTemplatePage.classList.add('d-none');
+      resumeFormSection.classList.add('d-none');
+      document.querySelectorAll('.modal.show').forEach(
+        m => bootstrap.Modal.getInstance(m).hide()
+      );
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+    function goToTemplates() {
+      mainHero.classList.add('d-none');
+      resumeFormSection.classList.add('d-none');
+      chooseTemplatePage.classList.remove('d-none');
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+    document.getElementById('buildResumeBtn').onclick = goToTemplates;
+    document.getElementById('buildResumeHeroBtn').onclick = goToTemplates;
+    // ========== Template Data ==========
+    const templates = [
+      {
+        color: "var(--template1)",
+        name: "Aarav Singh",
+        role: "Mechanical Engineer",
+        college: "IIT Kanpur",
+        summary: "Dynamic engineer specializing in CAD and robotics, focused on sustainable automotive solutions.",
+        experience: [
+          "- Designed fuel-efficient transmission at Tata Motors (2023-24)",
+          "- Student Researcher: Autonomous Drones Lab, IITK"
+        ],
+        skills: ["CAD", "SolidWorks", "Robotics"],
+      },
+      {
+        color: "var(--template2)",
+        name: "Sara Iyer",
+        role: "Data Scientist",
+        college: "IIT Bombay",
+        summary: "Machine learning enthusiast delivering actionable insights for fintech and health startups.",
+        experience: [
+          "- Intern, Analytics at Paytm (2024)",
+          "- Research: Deep Learning for Healthcare, IITB"
+        ],
+        skills: ["Python", "TensorFlow", "Data Visualization"],
+      },
+      {
+        color: "var(--template3)",
+        name: "Samuel Reddy",
+        role: "Product Designer",
+        college: "NIT Ahmedabad",
+        summary: "User-centered product designer with passion for accessibility and design systems.",
+        experience: [
+          "- UI/UX Intern, Flipkart (2023-24)",
+          "- Led design sprints for campus education apps"
+        ],
+        skills: ["Figma", "UX Research", "Prototyping"],
+      },
+      {
+        color: "var(--template4)",
+        name: "Prateek Desai",
+        role: "Software Engineer",
+        college: "BITS Pilani",
+        summary: "Full-stack developer building scalable cloud apps for EdTech and e-commerce.",
+        experience: [
+          "- SWE Intern, Zoho (2024)",
+          "- Developed EdTech portal with 10k+ users"
+        ],
+        skills: ["JavaScript", "React.js", "Node.js"],
+      },
+      {
+        color: "var(--template5)",
+        name: "Sneha Mehta",
+        role: "Business Analyst",
+        college: "IIM Bangalore",
+        summary: "Strategy professional skilled at data-driven decision making, forecast modeling and client engagement.",
+        experience: [
+          "- Analyst, Deloitte India (2023-24)",
+          "- Published report on SaaS trends in Indian startups"
+        ],
+        skills: ["Analytics", "Forecasting", "Client Relations"],
+      },
+      {
+        color: "var(--template6)",
+        name: "Rohan Bansal",
+        role: "Biomedical Researcher",
+        college: "AIIMS Delhi",
+        summary: "Dedicated medical researcher with expertise in genetics, focusing on rare disease detection.",
+        experience: [
+          "- Lab Asst., Genomics Lab, AIIMS (2023-25)",
+          "- Published two papers in genetics journals"
+        ],
+        skills: ["Lab Work", "Research", "Genomics"],
+      },
+      {
+        color: "var(--template7)",
+        name: "Farah Ali",
+        role: "Marketing Manager",
+        college: "SRCC, Delhi University",
+        summary: "Creative marketing specialist driving brand growth through integrated digital campaigns.",
+        experience: [
+          "- Digital Marketing Exec, Zomato (2024-25)",
+          "- Managed event partnerships for SRCC Fest"
+        ],
+        skills: ["Campaigns", "Content Strategy", "SEO"],
+      },
+      {
+        color: "var(--template8)",
+        name: "Alok Kumar",
+        role: "Civil Engineer",
+        college: "NIT Trichy",
+        summary: "Civil engineer passionate about green infrastructure and urban transport systems.",
+        experience: [
+          "- Bridge Project Intern, L&T (2023-24)",
+          "- Researched sustainable city planning at NITT"
+        ],
+        skills: ["AutoCAD", "Site Supervision", "Surveying"],
+      },
+      {
+        color: "var(--template9)",
+        name: "Nidhi Joshi",
+        role: "Chartered Accountant",
+        college: "St. Xavier's Kolkata",
+        summary: "Meticulous CA with strong background in financial auditing and compliance.",
+        experience: [
+          "- Audit Trainee, EY (2023-24)",
+          "- Led student finance club, SXCC"
+        ],
+        skills: ["Auditing", "Tally", "Compliance"],
+      },
+      {
+        color: "var(--template10)",
+        name: "Abhimanyu Patil",
+        role: "AI Research Intern",
+        college: "IIT Madras",
+        summary: "AI/ML intern passionate about scalable AI for real-time language translation.",
+        experience: [
+          "- Research Intern, Google AI (2024)",
+          "- Paper: NLP for Indic Languages"
+        ],
+        skills: ["PyTorch", "NLP", "Deep Learning"],
+      },
+      {
+        color: "var(--template11)",
+        name: "Ritika Kapoor",
+        role: "Legal Associate",
+        college: "NALSAR Hyderabad",
+        summary: "Detail-oriented legal professional with experience in contract drafting and corporate law.",
+        experience: [
+          "- Intern, Trilegal (2023-24)",
+          "- Won 2nd prize, All India Moot Court"
+        ],
+        skills: ["Legal Drafting", "Research", "Negotiation"],
+      },
+      {
+        color: "var(--template12)",
+        name: "Yash Mittal",
+        role: "Investment Banker",
+        college: "IIM Calcutta",
+        summary: "Adaptable finance graduate specializing in M&A and corporate finance analysis.",
+        experience: [
+          "- Analyst, Goldman Sachs (2024)",
+          "- Managed college investment fund"
+        ],
+        skills: ["Excel", "Valuations", "Financial Modeling"],
+      },
+    ];
+    // ========== Sample Resume on Hero (changes on refresh) ==========
+    let r = Math.floor(Math.random()*templates.length);
+    function fillSampleResume(idx) {
+      const t = templates[idx];
+      document.getElementById('sampleResume').innerHTML = `
+      <div class="sample-resume-header">
+        <h2>${t.name}</h2>
+        <div class="role">${t.role}</div>
+        <span style="font-size: 0.93rem; color:#444;"><b>${t.college}</b></span>
+      </div>
+      <div class="sample-section-title">Summary</div>
+      <div style="font-size:0.97em; color:#232323;">${t.summary}</div>
+      <div class="sample-section-title">Experience</div>
+      <ul style="padding-left:1.1em; color:#333;">
+        <li>${t.experience[0]}</li>
+        <li>${t.experience[1]}</li>
+      </ul>
+      <div class="sample-section-title">Skills</div>
+      ${t.skills.map(skill=>`<span class="badge">${skill}</span>`).join("")}
+      `;
+    }
+    fillSampleResume(r);
+    // ========== Template Cards ==========
+    const templateGrid = document.getElementById('templateGrid');
+    let templateCardsHtml = '';
+    templates.forEach((t,i)=>{
+      templateCardsHtml += `
+      <div class="resume-template-card" tabindex="0" style="border-top:5px solid ${t.color}">
+        <div class="template-preview" style="border-top:5px solid ${t.color};">
+          <div style="margin:auto;text-align:left;width:95%">
+            <div style="font-weight:700;color:${t.color};font-size:1.01em;">${t.name}</div>
+            <div style="font-size:1.02em;color:#d72660;">${t.role}</div>
+            <div style="font-size:0.94em;color:#222">${t.college}</div>
+            <div style="margin-top:6px;font-size:0.95em; color:#555;">${t.summary}</div>
+            <div class="mt-2" style="font-size:0.9em;">
+              <ul style="padding-left:.8em;margin-bottom:2px;">
+                <li>${t.experience[0]}</li>
+                <li>${t.experience[1]}</li>
+              </ul>
+              ${t.skills.map(skill=>`<span class="badge">${skill}</span>`).join("")}
+            </div>
+          </div>
+        </div>
+        <div class="choose-btn-box pb-2">
+          <button class="choose-template-btn" onclick="chooseTemplate(${i})" tabindex="0">Choose Template</button>
+        </div>
+      </div>
+      `;
+    });
+    templateGrid.innerHTML = templateCardsHtml;
+    // ========== Template Modal Logic ==========
+    let chosenTemplate = null;
+    window.chooseTemplate = function(idx){
+      chosenTemplate = idx;
+      const modal = new bootstrap.Modal(document.getElementById('chooseModeModal'));
+      modal.show();
+    };
+    document.getElementById('uploadResumeBtn').onclick = function() {
+      bootstrap.Modal.getInstance(document.getElementById('chooseModeModal')).hide();
+      new bootstrap.Modal(document.getElementById('uploadResumeModal')).show();
+    };
+    document.getElementById('startFromScratchBtn').onclick = function() {
+      bootstrap.Modal.getInstance(document.getElementById('chooseModeModal')).hide();
+      chooseTemplatePage.classList.add('d-none');
+      resumeFormSection.classList.remove('d-none'); window.scrollTo({top:0});
+    };
+    // ========== Resume Builder Multi-Step Logic ==========
+    function nextFormStep(current){
+      document.getElementById('formStep'+current).classList.add('d-none');
+      document.getElementById('formStep'+(current+1)).classList.remove('d-none');
+    }
+    function prevFormStep(current){
+      document.getElementById('formStep'+current).classList.add('d-none');
+      document.getElementById('formStep'+(current-1)).classList.remove('d-none');
+    }
+    function showResumePreview() {
+      // Grab form data
+      function val(id){return document.getElementById(id).value;}
+      let name = val('fullName');
+      let contact = `<b>${val('formEmail')}</b> | ${val('phone')}`;
+      if(val('linkedin')) contact += ` | <a href="${val('linkedin')}" target="_blank" style="color:#ea4;text-decoration:underline">LinkedIn</a>`;
+      if(val('github')) contact += ` | <a href="${val('github')}" target="_blank" style="color:#e941bc;text-decoration:underline">Portfolio</a>`;
+      let html = `<h2 style="color:var(--magenta)">${name}</h2>
+        <div style="font-size:1.03em;color:#232323;margin-bottom:8px;">${contact}</div>
+        <div class="sample-section-title">Summary</div><div>${val('objective')}</div>
+        <div class="sample-section-title">Education</div><div>${val('education')}</div>
+        <div class="sample-section-title">Skills</div>`;
+      let skills = val('skills').split(',').map(s=>`<span class="badge">${s.trim()}</span>`).join('');
+      html += `<div style="margin-bottom:7px">${skills}</div>`;
+      if(val('experience')){
+        html += `<div class="sample-section-title">Experience</div><div>${val('experience').replace(/\n/g,'<br>')}</div>`;
+      }
+      if(val('projects')){
+        html += `<div class="sample-section-title">Projects</div><div>${val('projects').replace(/\n/g,'<br>')}</div>`;
+      }
+      if(val('achievements')){
+        html += `<div class="sample-section-title">Achievements</div><div>${val('achievements').replace(/\n/g,'<br>')}</div>`;
+      }
+      document.getElementById('resumePreviewCard').innerHTML=html;
+      nextFormStep(2);
+    }
+    document.getElementById('downloadPdf').onclick = function(){
+      const { jsPDF } = window.jspdf;
+      let doc = new jsPDF("p","pt","a4");
+      let content = document.getElementById('resumePreviewCard');
+      doc.html(content,{callback:function(d){d.save("ProResume.pdf");},autoPaging:'text',margin:[32,32,32,32]});
+    };
+    document.getElementById('signInBtn').onclick = function() {
+      new bootstrap.Modal(document.getElementById('signInModal')).show();
+    };
+    document.getElementById('loginForm').onsubmit = function(e) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPass').value.trim();
+      if(email === 'user@example.com' && password === 'password123') {
+        alert('Login successful!');
+        bootstrap.Modal.getInstance(document.getElementById('signInModal')).hide();
+      } else {
+        alert('Invalid email or password. Use the demo: user@example.com / password123');
+      }
+    };
+    // ===== File upload handling for resume upload modal =====
+    const resumeFileInput = document.getElementById('resumeFileInput');
+    const resumeFileStatus = document.getElementById('resumeFileStatus');
+    resumeFileInput.addEventListener('change', function(){
+      if (this.files && this.files.length) {
+        const file = this.files[0];
+        const allowed = ["application/pdf","application/msword",
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
+        if (!allowed.includes(file.type) &&
+            !file.name.endsWith('.doc') && !file.name.endsWith('.docx') && !file.name.endsWith('.pdf')) {
+          resumeFileStatus.textContent = "Please upload a PDF, DOC or DOCX file.";
+          resumeFileStatus.style.color = "red";
+          this.value = "";
+        } else {
+          resumeFileStatus.textContent = "Selected file: " + file.name;
+          resumeFileStatus.style.color = "var(--magenta)";
+        }
+      } else {
+        resumeFileStatus.textContent = "";
+      }
+    });
+    document.getElementById('uploadResumeModal').addEventListener('show.bs.modal', ()=>{
+      resumeFileInput.value = "";
+      resumeFileStatus.textContent = "";
+    });
+  </script>
+</body>
+</html>
